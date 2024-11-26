@@ -15,15 +15,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalContext
 import tn.esprit.mamassist.R
 import tn.esprit.mamassist.ui.theme.VSky
 import java.util.regex.Pattern
+
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
@@ -42,24 +43,26 @@ fun LoginScreen(
     val emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$")
 
     Box(modifier = Modifier.fillMaxSize()) {
+        // Image de fond
         Image(
-            painter = painterResource(id = R.drawable.loginscreen),
+            painter = painterResource(id = R.drawable.logggin),
             contentDescription = "logo happy",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-        Spacer(modifier = Modifier.height(20.dp)) // Réduit l'espace avant le champ email
 
-        Box(modifier = Modifier.fillMaxSize())
-
+        // Contenu principal
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(12.dp)) // Réduit l'espace avant le champ email
+            // Espacement entre l'image et les champs
+            Spacer(modifier = Modifier.height(120.dp))
 
-            // Email field with validation
+            // Champ email
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -92,9 +95,9 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp)) // Réduit l'espace entre email et password
+            Spacer(modifier = Modifier.height(8.dp)) // Espacement entre email et password
 
-            // Password field with validation
+            // Champ mot de passe
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -127,16 +130,13 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp)) // Espacement supplémentaire avant le bouton Login
+            Spacer(modifier = Modifier.height(16.dp)) // Espacement avant le bouton Login
 
-            // Login button
+            // Bouton de connexion
             Button(
                 onClick = {
-                    // Validate the fields before attempting login
                     if (email.isEmpty()) emailError.value = "Email cannot be empty"
                     if (password.isEmpty()) passwordError.value = "Password cannot be empty"
-
-                    // If validation passes, attempt login
                     if (email.isNotEmpty() && password.isNotEmpty()) {
                         viewModel.loginUser(email, password)
                         onLoginSuccess()
@@ -147,21 +147,20 @@ fun LoginScreen(
             ) {
                 Text(text = "Login", color = Color.White)
             }
-            // Forgot password link
+
+            // Lien "Mot de passe oublié"
             Text(
                 "Forgot password",
                 color = Color(0xFF2980B9),
                 fontSize = 14.sp,
                 modifier = Modifier
                     .padding(start = 135.dp)
-                    .clickable(onClick = {
-
-
-                    })
+                    .clickable(onClick = { /* Handle password reset */ })
             )
 
-            Spacer(modifier = Modifier.height(24.dp)) // Espacement entre Login et "Or login with..."
+            Spacer(modifier = Modifier.height(24.dp)) // Espacement avant "Or login with..."
 
+            // Texte "Ou connectez-vous avec"
             Text(
                 text = "Or, login with...",
                 fontSize = 15.sp,
@@ -170,7 +169,7 @@ fun LoginScreen(
                     .alpha(0.5f)
             )
 
-            // Row for social login buttons (Google, Facebook, Apple)
+            // Boutons de connexion sociale
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -180,9 +179,9 @@ fun LoginScreen(
                 AuthOption(image = R.drawable.apple, onClick = { /* Handle Apple login */ })
             }
 
-            Spacer(modifier = Modifier.height(28.dp)) // Espacement supplémentaire avant "Don't have an account?"
+            Spacer(modifier = Modifier.height(28.dp)) // Espacement avant le lien Sign Up
 
-            // Navigation to sign-up screen
+            // Lien pour aller à l'écran d'inscription
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
@@ -207,7 +206,7 @@ fun AuthOption(image: Int, onClick: () -> Unit) {
         Image(
             painter = painterResource(id = image),
             contentDescription = "Auth option",
-            modifier = Modifier.size(48.dp) // Ajustez la taille de l'icône
+            modifier = Modifier.size(48.dp)
         )
     }
 }

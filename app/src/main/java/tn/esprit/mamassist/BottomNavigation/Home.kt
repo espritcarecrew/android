@@ -222,6 +222,8 @@ fun HomeScreen(navController: NavHostController) {
                     .shadow(3.dp, shape = RoundedCornerShape(20.dp))
                     .background(color = Color.White, shape = RoundedCornerShape(20.dp))
                     .align(Alignment.CenterHorizontally)
+                    .clickable { navController.navigate("yourSituation") } // Ajout de la navigation
+
             )
             {
                 ConstraintLayout(
@@ -443,9 +445,9 @@ fun HomeScreen(navController: NavHostController) {
 
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-  //  val fakeNavController = rememberNavController()
-    //HomeScreen(navController = fakeNavController)
-//}
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    val fakeNavController = rememberNavController()
+    HomeScreen(navController = fakeNavController)
+}

@@ -91,6 +91,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
 
+    implementation ("androidx.compose.foundation:foundation:1.3.0")  // Pour les composants de base
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.3.0")
+
     // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

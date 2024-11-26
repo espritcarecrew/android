@@ -6,6 +6,16 @@ import retrofit2.http.POST
 
 import retrofit2.Call
 
+
+data class Baby(
+    var name: String = "",
+    var age: String = "",
+    var weight: String = "",
+    var height: String = "",
+    var healthIssues: String = "",
+    var behavior: String = ""
+)
+
 data class LoginRequest(
     val email: String,
     val password: String

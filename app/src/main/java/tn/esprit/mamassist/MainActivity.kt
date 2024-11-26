@@ -12,8 +12,10 @@ import tn.esprit.mamassist.BottomNavigation.HomeScreen
 import tn.esprit.mamassist.BottomNavigation.ProfileScreen
 import tn.esprit.mamassist.Login.LoginScreen
 import tn.esprit.mamassist.Login.LoginViewModel
+import tn.esprit.mamassist.Pregnant.PregnantFormScreen
 import tn.esprit.mamassist.Register.RegisterScreen
 import tn.esprit.mamassist.data.network.ApiClient
+import tn.esprit.mamassist.data.network.Baby
 import tn.esprit.mamassist.data.repository.UserRepository
 import tn.esprit.mamassist.ui.theme.MamAssistTheme
 
@@ -40,7 +42,7 @@ fun MainApp() {
             LoginScreen(
                 viewModel = loginViewModel,
                 onNavigateToRegister = { navController.navigate("register") },
-                onLoginSuccess = { navController.navigate("home") } // Ajouter cette ligne
+                onLoginSuccess = { navController.navigate("home") }
             )
         }
         composable("register") {
@@ -50,10 +52,35 @@ fun MainApp() {
         }
         composable("home") {
             HomeScreen(navController = navController)
-
         }
-        composable("profile"){
+        composable("profile") {
             ProfileScreen()
+        }
+        composable("yourSituation") {
+            YourSituationScreen(
+                onPregnantClick = { navController.navigate("pregnantForm") },
+                onAlreadyHaveBabiesClick = { navController.navigate("motherForm") }
+            )
+        }
+        composable("pregnantForm") {
+            PregnantFormScreen(
+                userName = "Marie Dupont",
+                userAge = "29",
+                onSubmit = { formData ->
+                    println("Formulaire soumis : $formData")
+                }
+            )
+        }
+        composable("motherForm") {
+            MotherForm(
+                onAddBabyClick = { navController.navigate("babyForm") }
+            )
+        }
+        composable("babyForm") {
+            BabyForm(
+                baby = Baby(),
+                onDelete = { navController.popBackStack() }
+            )
         }
     }
 }
@@ -62,6 +89,6 @@ fun MainApp() {
 @Composable
 fun GreetingPreview() {
     MamAssistTheme {
-        MainApp() // Utilisation de MainApp pour voir l'aperçu
+        MainApp()
     }
 }
