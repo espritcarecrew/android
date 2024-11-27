@@ -33,50 +33,57 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import coil.compose.AsyncImage
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import tn.esprit.mamassist.BottomNavigation.BottomBar
 
 @Composable
-fun HealthAppHomeScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF4D92FF), Color.White)
+fun HealthAppHomeScreen(navController: NavHostController) {
+    Scaffold(
+        bottomBar = { BottomBar(navController = navController) }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFF4D92FF), Color.White)
+                    )
                 )
+                .padding(padding)
+                .padding(16.dp)
+        ) {
+            // Header Section
+            HeaderSection()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Search Bar
+            SearchBar()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Categories
+            Text(
+                text = "Categories",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(vertical = 8.dp)
             )
-            .padding(16.dp)
-    ) {
-        // Header Section
-        HeaderSection()
+            CategoriesSection()
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Search Bar
-        SearchBar()
+            // Recommended Doctors
+            SectionWithSeeAll("Recommended Doctors")
+            RecommendedDoctorsSection()
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Categories
-        Text(
-            text = "Categories",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        CategoriesSection()
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Recommended Doctors
-        SectionWithSeeAll("Recommended Doctors")
-        RecommendedDoctorsSection()
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Consultation Schedule
-        SectionWithSeeAll("Consultation Schedule")
-        ConsultationSchedule()
+            // Consultation Schedule
+            SectionWithSeeAll("Consultation Schedule")
+            ConsultationSchedule()
+        }
     }
 }
 
@@ -94,13 +101,13 @@ fun HeaderSection() {
                 fontSize = 14.sp
             )
             Text(
-                text = "Find your desired ",
+                text = "Find your desired",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Doctor Right Now! ",
+                text = "Doctor Right Now!",
                 color = Color.White,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
@@ -123,18 +130,14 @@ fun SearchBar() {
             .background(Color.White, RoundedCornerShape(16.dp))
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Icône de recherche
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector = Icons.Default.Search, // Icône par défaut pour la recherche
+                imageVector = Icons.Default.Search,
                 contentDescription = "Search Icon",
                 tint = Color.Gray,
                 modifier = Modifier.size(24.dp)
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Espacement entre l'icône et le texte
-            // Texte d'indication
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Search Doctor or Symptom",
                 color = Color.Gray,
@@ -144,17 +147,14 @@ fun SearchBar() {
     }
 }
 
-
 @Composable
 fun CategoriesSection() {
-    // Liste des catégories
     val categories = listOf(
         "Gynécologie", "Pédiatrie", "Endocrinologie",
         "Nutritionniste", "Psychologue", "Kinésithérapeute",
         "Cardiologie", "Pneumologie"
     )
 
-    // Section avec LazyRow pour un défilement horizontal
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -162,8 +162,7 @@ fun CategoriesSection() {
     ) {
         items(categories) { category ->
             Column(
-                modifier = Modifier
-                    .clickable { /* Handle click */ },
+                modifier = Modifier.clickable { /* Handle click */ },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -172,7 +171,6 @@ fun CategoriesSection() {
                         .background(Color(0xFFEBF2FF), shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Première lettre de la catégorie comme icône
                     Text(
                         text = category.first().toString(),
                         fontSize = 20.sp,
@@ -180,7 +178,6 @@ fun CategoriesSection() {
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                // Nom de la catégorie
                 Text(
                     text = category,
                     fontSize = 12.sp,
@@ -192,11 +189,8 @@ fun CategoriesSection() {
     }
 }
 
-
 @Composable
 fun SectionWithSeeAll(title: String) {
-    Spacer(modifier = Modifier.height(16.dp))
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -212,11 +206,9 @@ fun SectionWithSeeAll(title: String) {
         )
     }
 }
+
 @Composable
 fun RecommendedDoctorsSection() {
-    Spacer(modifier = Modifier.height(16.dp))
-
-    // Liste des docteurs recommandés
     val doctors = listOf(
         "Dr. Amelia Daniel\nDermatologist",
         "Dr. Erik Wagner\nUrology",
@@ -225,14 +217,12 @@ fun RecommendedDoctorsSection() {
         "Dr. Mark Spencer\nEndocrinology"
     )
 
-    // LazyRow pour le défilement horizontal
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         items(doctors) { doctor ->
-            // Variable d'état pour suivre l'état du favori
             var isFavorite by remember { mutableStateOf(false) }
 
             Box(
@@ -241,26 +231,21 @@ fun RecommendedDoctorsSection() {
                     .background(Color.White, RoundedCornerShape(16.dp))
                     .padding(8.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Conteneur pour l'image et l'icône de favoris
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
                         modifier = Modifier
                             .size(140.dp)
-                            .background(Color.LightGray) // Fond de l'image
-                            .clip(RoundedCornerShape(8.dp)), // Forme carrée avec coins arrondis
+                            .background(Color.LightGray)
+                            .clip(RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        // Image du docteur
                         Image(
-                            painter = painterResource(id = R.drawable.doctor), // Image locale
+                            painter = painterResource(id = R.drawable.doctor),
                             contentDescription = "Doctor Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
 
-                        // Icône de favoris cliquable
                         Icon(
                             imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = "Favorite Icon",
@@ -268,15 +253,10 @@ fun RecommendedDoctorsSection() {
                             modifier = Modifier
                                 .size(30.dp)
                                 .padding(4.dp)
-                                .background(Color.White)
-                                .clickable {
-                                    isFavorite = !isFavorite // Inverser l'état
-                                }
+                                .clickable { isFavorite = !isFavorite }
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-
-                    // Nom et spécialité du docteur
                     Text(
                         text = doctor,
                         textAlign = TextAlign.Center,
@@ -291,47 +271,35 @@ fun RecommendedDoctorsSection() {
     }
 }
 
-
 @Composable
 fun ConsultationSchedule() {
     val doctors = listOf(
-        "Dr. Jackson Moraes\nDermatology & Leprosy",
+        "Dr. Jackson Moraes\nDermatology",
         "Dr. Amelia Daniel\nDermatologist",
-        "Dr. Erik Wagner\nUrology",
-        "Dr. Benjamin Scott\nCardiology",
-        "Dr. Sarah Connor\nEndocrinology",
-        "Dr. John Smith\nPediatrics"
+        "Dr. Erik Wagner\nUrology"
     )
 
-    // Ajout d'un LazyColumn pour gérer le défilement vertical
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Espacement entre les éléments
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(doctors) { doctor ->
-            // Boîte pour chaque docteur
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White, RoundedCornerShape(16.dp))
-                    .padding(16.dp),
+                    .padding(16.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically, // Alignement vertical
-                    horizontalArrangement = Arrangement.Start // Alignement horizontal à gauche
-                ) {
-                    // Image du docteur
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = painterResource(id = R.drawable.doctor), // Image locale
+                        painter = painterResource(id = R.drawable.doctor),
                         contentDescription = "Doctor Image",
                         modifier = Modifier
-                            .size(100.dp) // Taille de l'image
-                            .padding(end = 16.dp) // Espacement entre l'image et le texte
+                            .size(100.dp)
+                            .padding(end = 16.dp)
                     )
-
-                    // Texte du docteur
                     Text(
                         text = doctor,
                         fontWeight = FontWeight.Bold,
@@ -344,9 +312,8 @@ fun ConsultationSchedule() {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewHealthAppHomeScreen() {
-    HealthAppHomeScreen()
+    HealthAppHomeScreen(navController = rememberNavController())
 }

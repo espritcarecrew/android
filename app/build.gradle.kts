@@ -62,16 +62,20 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     // Compose UI with BOM
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(platform("androidx.compose:compose-bom:2023.10.00"))
     implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
+
+    // Runtime for state management
+    implementation("androidx.compose.runtime:runtime")
 
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
     // Room for local databases
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation(libs.generativeai)
     implementation(libs.androidx.runtime.livedata)
     kapt("androidx.room:room-compiler:2.6.1")
 
@@ -86,19 +90,11 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
-
-
-    implementation ("androidx.compose.foundation:foundation:1.3.0")  // Pour les composants de base
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.3.0")
-
     // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     // Debugging tools for Compose

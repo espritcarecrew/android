@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import tn.esprit.mamassist.ToolsScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
@@ -13,6 +14,9 @@ fun BottomNavGraph(navController: NavHostController) {
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(navController = navController)
+        }
+        composable(route = BottomBarScreen.Tools.route) {
+            ToolsScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
             ProfileScreen()

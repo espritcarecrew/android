@@ -251,6 +251,7 @@ fun TimeSlotSection(
 ) {
     Column {
         Text(
+
             text = sectionTitle,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,

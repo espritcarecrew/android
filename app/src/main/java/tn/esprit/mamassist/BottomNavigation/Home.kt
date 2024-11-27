@@ -285,8 +285,75 @@ fun HomeScreen(navController: NavHostController) {
 
 
 // Spacer entre le Box et le premier Row
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 0.dp)
+//                    .offset(y = (-10).dp)
+                    .shadow(3.dp, shape = RoundedCornerShape(20.dp))
+                    .background(color = Color.White, shape = RoundedCornerShape(20.dp))
+                    .align(Alignment.CenterHorizontally)
+                    .clickable { navController.navigate("yourSituation") } // Ajout de la navigation
 
+            )
+            {
+                ConstraintLayout(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 15.dp)
+                        .shadow(3.dp, shape = RoundedCornerShape(25.dp))
+                        .height(100.dp)
+                        .background( // Appliquer le fond rose ici
+                            color = Pink40,
+                            shape = RoundedCornerShape(
+                                bottomStart = 0.dp,
+                                bottomEnd = 0.dp
+                            )
+                        )
+                ) {
+                    val (img, text1, text2) = createRefs()
+
+                    // Image
+                    Image(
+                        painter = painterResource(id = R.drawable.doctor),
+                        contentDescription = null,
+                        modifier = Modifier.constrainAs(img) {
+                            top.linkTo(parent.top)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        }
+                    )
+
+                    // Texte principal
+                    Text(
+                        text = "Doctor Right Now!",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(top = 16.dp, start = 8.dp)
+                            .constrainAs(text1) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                            }
+                    )
+
+                    // Texte secondaire
+                    Text(
+                        text = "let's consult the best doctor",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 8.dp, start = 8.dp)
+                            .constrainAs(text2) {
+                                top.linkTo(text1.bottom)
+                                start.linkTo(parent.start)
+                            }
+                    )
+                }
+            }
 // Première rangée
             Row(
                 verticalAlignment = Alignment.CenterVertically,

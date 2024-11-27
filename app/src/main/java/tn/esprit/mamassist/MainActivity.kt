@@ -53,6 +53,9 @@ fun MainApp() {
         composable("home") {
             HomeScreen(navController = navController)
         }
+        composable("tools") {
+            ToolsScreen(navController = navController)
+        }
         composable("profile") {
             ProfileScreen()
         }
@@ -82,8 +85,12 @@ fun MainApp() {
                 onDelete = { navController.popBackStack() }
             )
         }
+        composable("dailyCheck") {
+            DailyCheckInScreen() // Ajoutez cette ligne
+        }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

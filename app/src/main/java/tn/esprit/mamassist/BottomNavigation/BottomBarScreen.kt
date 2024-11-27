@@ -1,6 +1,7 @@
 package tn.esprit.mamassist.BottomNavigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -17,6 +18,11 @@ sealed class BottomBarScreen(
         icon = Icons.Default.Home
     )
 
+    object Tools : BottomBarScreen(
+        route = "Tools",
+        title = "Tolls",
+        icon = Icons.Default.Build
+    )
     object Profile : BottomBarScreen(
         route = "profile",
         title = "Profile",
@@ -28,4 +34,6 @@ sealed class BottomBarScreen(
         title = "Settings",
         icon = Icons.Default.Settings
     )
+
+
 }
