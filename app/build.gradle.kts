@@ -71,6 +71,9 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:<version>")
     implementation ("androidx.compose.material:material:<version>")
     implementation ("androidx.compose.ui:ui:<version>")
+    implementation ("androidx.compose.foundation:foundation:<version>") // Add this if missing
+
+    implementation ("com.google.accompanist:accompanist-pager:0.28.0")
 
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.5.3")

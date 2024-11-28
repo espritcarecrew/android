@@ -1,24 +1,14 @@
 package tn.esprit.mamassist.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,55 +27,48 @@ fun HomeScreen(navController: NavController) {
                 title = {
                     Box(
                         modifier = Modifier.fillMaxWidth(),
-                        //contentAlignment = Alignment.Start
                     ) {
                         Text(
                             text = "MamAssist",
-                            color = Color.White, // Set text color to white
-                            fontSize = 20.sp // Adjust font size if needed
+                            color = Color.White,
+                            fontSize = 20.sp
                         )
                     }
                 },
                 actions = {
-                    // Settings Icon
                     IconButton(onClick = { /* Settings action */ }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White) // Set icon tint to white
+                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                     }
                 },
-                backgroundColor = Color(0xFFF48FB1), // Set background color to match ProfileScreen
+                backgroundColor = Color(0xFFF48FB1),
                 elevation = 8.dp
             )
         },
         bottomBar = {
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp) // Add margin around the bottom bar
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth()
-                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(24.dp), clip = false) // Add shadow with rounded shape
-                    .clip(RoundedCornerShape(24.dp)) // Clip the background to rounded corners
-                    .background(Color.White) // Set the background color of the bottom bar
+                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(24.dp), clip = false)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(Color.White)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp), // Add padding for better spacing
+                        .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Home Icon
                     IconButton(onClick = { navController.navigate("home") }) {
                         Icon(Icons.Default.Home, contentDescription = "Home", tint = Color(0xFFF48FB1))
                     }
-                    // Calendar Icon
-                    IconButton(onClick = { /* Placeholder for Calendar */ }) {
+                    IconButton(onClick = { navController.navigate("calendar") }) {
                         Icon(Icons.Default.CalendarToday, contentDescription = "Calendar", tint = Color(0xFFF48FB1))
                     }
-                    // Cart Icon
                     IconButton(onClick = { /* Navigate to AI Chat screen */ }) {
                         Icon(Icons.Default.Chat, contentDescription = "AI Chat", tint = Color(0xFFF48FB1))
                     }
-
-                    // Profile Icon
                     IconButton(onClick = { navController.navigate("profile") }) {
                         Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color(0xFFF48FB1))
                     }
@@ -101,52 +84,40 @@ fun HomeScreen(navController: NavController) {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
-
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // Add the styled search bar
                 StyledSearchBar()
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Add more UI elements as needed
                 FeaturedSection()
-
                 Spacer(modifier = Modifier.height(16.dp))
-                RecommendedCards()
-
-
+                StatisticsCard()
             }
         }
     )
 }
 
+
 @Composable
 fun StyledSearchBar() {
-    // Remember the state of the text field
     var searchText = remember { mutableStateOf(TextFieldValue("")) }
-
-    // OutlinedTextField with explicit state handling
     OutlinedTextField(
-        value = searchText.value, // Provide the state value here
+        value = searchText.value,
         onValueChange = { newValue ->
-            searchText.value = newValue // Update the state when the value changes
+            searchText.value = newValue
         },
         modifier = Modifier
-            .fillMaxWidth() // Full width for the search bar
-            .padding(vertical = 8.dp) // Padding around the search bar
-            .height(50.dp) // Set height of the search bar
-            .clip(RoundedCornerShape(30.dp)) // Rounded corners for the search bar
-            .background(Color.White) // White background for the search field
-            .shadow(1.dp, RoundedCornerShape(1.dp)), // Outer shadow for visibility
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .height(50.dp)
+            .clip(RoundedCornerShape(30.dp))
+            .background(Color.White)
+            .shadow(1.dp, RoundedCornerShape(1.dp)),
         leadingIcon = {
-            // Icon inside the search bar
-            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFFE91E63))
+            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xE1E91EB6))
         },
-        placeholder = { Text("Search", color = Color.Gray) }, // Placeholder text
-        textStyle = MaterialTheme.typography.body1.copy(color = Color.Black), // Text style inside the search bar
-        singleLine = true, // One line for the search field
-        shape = RoundedCornerShape(30.dp) // Rounded corners
+        placeholder = { Text("Search", color = Color.Gray) },
+        textStyle = MaterialTheme.typography.body1.copy(color = Color.Black),
+        singleLine = true,
+        shape = RoundedCornerShape(30.dp)
     )
 }
 
@@ -171,7 +142,6 @@ fun FeaturedSection() {
                     fontSize = 20.sp,
                     color = Color.White
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = { /* Action for Baby Details */ },
@@ -186,32 +156,30 @@ fun FeaturedSection() {
 }
 
 @Composable
-fun RecommendedCards() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        RecommendedCard(title = "Care", sessions = "Doctors", backgroundColor = Color(0xFFD0CECE))
-        RecommendedCard(title = "Milestones", sessions = "Baby Progress", backgroundColor = Color(0xFFD0CECE))
-        RecommendedCard(title = "Health", sessions = "Doctor Visits", backgroundColor = Color(0xFFD0CECE))
-    }
-}
-
-@Composable
-fun RecommendedCard(title: String, sessions: String, backgroundColor: Color) {
+fun StatisticsCard() {
     Box(
         modifier = Modifier
-            .width(120.dp) // Increased width
-            .height(140.dp) // Increased height
-            .background(backgroundColor, RoundedCornerShape(16.dp))
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(Color(0xFFD0CECE), RoundedCornerShape(16.dp))
+            .padding(16.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = title, fontSize = 18.sp, color = Color.White) // Updated text color
-            Text(text = sessions, fontSize = 14.sp, color = Color.White) // Updated text color
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Statistics",
+                fontSize = 24.sp,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Monitor baby growth, health trends, and activity progress.",
+                fontSize = 16.sp,
+                color = Color.White
+            )
         }
     }
 }

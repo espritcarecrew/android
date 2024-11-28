@@ -1,5 +1,7 @@
 package tn.esprit.mamassist
 
+import CalendarScreen
+//import MotherAndBabyScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MamAssistTheme {
-                MainApp()
+               MainApp()
             }
         }
     }
@@ -32,6 +34,9 @@ fun MainApp() {
 
     // Set up NavHost with all your routes
     NavHost(navController = navController, startDestination = "login") {
+        composable("MotherAndBabyScreen") {
+            MotherAndBabyScreen(navController = navController) // Pass the NavController here
+        }
         composable("login") {
             val apiService = ApiClient.getApiService()
             val userRepository = UserRepository(apiService)
@@ -52,5 +57,15 @@ fun MainApp() {
         composable("profile") {
             ProfileScreen(navController = navController) // Add the profile screen route
         }
+        composable("calendar") {
+            CalendarScreen(navController = navController) // Add the profile screen route
+        }
+        composable("babyList") {
+            BabyListScreen(navController = navController)
+        }
+        composable("motherList") {
+            MotherListScreen(navController = navController)
+        }
+
     }
 }
