@@ -16,6 +16,7 @@ import tn.esprit.mamassist.screens.ProfileScreen
 import tn.esprit.mamassist.ui.theme.MamAssistTheme
 import tn.esprit.mamassist.data.network.ApiClient
 import tn.esprit.mamassist.data.repository.UserRepository
+import tn.esprit.mamassist.screens.ArticleDetailScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +54,11 @@ fun MainApp() {
         composable("home/pregnant") { backStackEntry ->
            // val userType = backStackEntry.arguments?.getString("userType") ?: "default"
             HomeScreen(navController = navController) // Pass the userType to HomeScreen
+        }
+
+        composable("articleDetail/{articleIndex}") { backStackEntry ->
+            val articleIndex = backStackEntry.arguments?.getString("articleIndex")?.toInt() ?: 0
+            ArticleDetailScreen(navController = navController, articleIndex = articleIndex)
         }
         composable("profile") {
             ProfileScreen(navController = navController) // Add the profile screen route
