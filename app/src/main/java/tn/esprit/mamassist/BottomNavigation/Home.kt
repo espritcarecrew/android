@@ -1,6 +1,5 @@
 package tn.esprit.mamassist.BottomNavigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -294,7 +293,7 @@ fun HomeScreen(navController: NavHostController) {
                     .shadow(3.dp, shape = RoundedCornerShape(20.dp))
                     .background(color = Color.White, shape = RoundedCornerShape(20.dp))
                     .align(Alignment.CenterHorizontally)
-                    .clickable { navController.navigate("yourSituation") } // Ajout de la navigation
+                    .clickable { navController.navigate("healthAppHome") } // Ajout de la navigation
 
             )
             {

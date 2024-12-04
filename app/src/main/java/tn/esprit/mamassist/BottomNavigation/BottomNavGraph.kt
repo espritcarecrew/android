@@ -1,16 +1,21 @@
 package tn.esprit.mamassist.BottomNavigation
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import tn.esprit.mamassist.ToolsScreen
+import tn.esprit.mamassist.ContentScreen
+import tn.esprit.mamassist.Tools.ToolsScreen
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Home.route // L'écran de démarrage est Home
+        startDestination = BottomBarScreen.Home.route,
+        modifier = Modifier.padding(paddingValues) // Gestion des marges pour éviter les chevauchements
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(navController = navController)
@@ -19,10 +24,10 @@ fun BottomNavGraph(navController: NavHostController) {
             ToolsScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
         }
-        composable(route = BottomBarScreen.Settings.route) {
-            SettingsScreen()
+        composable(route = BottomBarScreen.Content.route) {
+            ContentScreen(navController = navController)
         }
     }
 }

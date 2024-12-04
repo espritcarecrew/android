@@ -13,12 +13,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController) { // Updated to NavHostController
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Tools,
         BottomBarScreen.Profile,
-        BottomBarScreen.Settings,
+        BottomBarScreen.Content,
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -39,7 +39,7 @@ fun BottomBar(navController: NavHostController) {
 fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
-    navController: NavHostController
+    navController: NavHostController // Ensured compatibility with NavHostController
 ) {
     NavigationBarItem(
         label = { Text(text = screen.title) },

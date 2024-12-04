@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -23,17 +24,18 @@ sealed class BottomBarScreen(
         title = "Tolls",
         icon = Icons.Default.Build
     )
+    object Content : BottomBarScreen(
+        route = "Content",
+        title = "Content",
+        icon = Icons.Default.Search
+    )
     object Profile : BottomBarScreen(
         route = "profile",
         title = "Profile",
         icon = Icons.Default.Person
     )
 
-    object Settings : BottomBarScreen(
-        route = "settings",
-        title = "Settings",
-        icon = Icons.Default.Settings
-    )
+
 
 
 }

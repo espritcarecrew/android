@@ -1,17 +1,10 @@
 package tn.esprit.mamassist
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +19,8 @@ import tn.esprit.mamassist.ui.theme.Pink40
 @Composable
 fun YourSituationScreen(
     onPregnantClick: () -> Unit = {}, // Par défaut, actions vides pour le preview
-    onAlreadyHaveBabiesClick: () -> Unit = {}
+    onAlreadyHaveBabiesClick: () -> Unit = {},
+    onBackClick: () -> Unit = {} // Ajout de la fonction de retour
 ) {
     // Image de fond
     Box(
@@ -48,6 +42,23 @@ fun YourSituationScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Barre d'en-tête avec le bouton retour
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Retour",
+                        tint = Color.Black
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Texte de titre
             Text(
                 text = "Your Situation",
@@ -65,9 +76,8 @@ fun YourSituationScreen(
                     .padding(vertical = 120.dp)
                     .fillMaxWidth(0.5f) // Largeur ajustée à 80% de la largeur de l'écran
                     .height(70.dp) // Hauteur du bouton
-
             ) {
-                Text(text = "Pregnant",color = Color.Black)
+                Text(text = "Pregnant", color = Color.Black)
             }
 
             // Bouton "Already Have Babies"
@@ -82,7 +92,6 @@ fun YourSituationScreen(
             ) {
                 Text(text = "Already Have Babies", color = Color.Black)
             }
-
         }
     }
 }
@@ -92,6 +101,7 @@ fun YourSituationScreen(
 fun YourSituationScreenPreview() {
     YourSituationScreen(
         onPregnantClick = { println("Pregnant button clicked!") },
-        onAlreadyHaveBabiesClick = { println("Already Have Babies button clicked!") }
+        onAlreadyHaveBabiesClick = { println("Already Have Babies button clicked!") },
+        onBackClick = { println("Back button clicked!") }
     )
 }

@@ -12,11 +12,18 @@ import tn.esprit.mamassist.BottomNavigation.HomeScreen
 import tn.esprit.mamassist.BottomNavigation.ProfileScreen
 import tn.esprit.mamassist.Login.LoginScreen
 import tn.esprit.mamassist.Login.LoginViewModel
+import tn.esprit.mamassist.MamaAvecBebe.BabyForm
+import tn.esprit.mamassist.MamaAvecBebe.MotherForm
 import tn.esprit.mamassist.Pregnant.PregnantFormScreen
+import tn.esprit.mamassist.Tools.DailyCheckInScreen
 import tn.esprit.mamassist.Register.RegisterScreen
+import tn.esprit.mamassist.Tools.TaskDetailsScreen
+import tn.esprit.mamassist.Tools.ToolsScreen
 import tn.esprit.mamassist.data.network.ApiClient
 import tn.esprit.mamassist.data.network.Baby
 import tn.esprit.mamassist.data.repository.UserRepository
+import tn.esprit.mamassist.doctor.DoctorProfileScreen
+import tn.esprit.mamassist.doctor.HealthAppHomeScreen
 import tn.esprit.mamassist.ui.theme.MamAssistTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,6 +36,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
+
 
 @Composable
 fun MainApp() {
@@ -56,13 +66,17 @@ fun MainApp() {
         composable("tools") {
             ToolsScreen(navController = navController)
         }
+        composable("content") {
+            ContentScreen(navController = navController)
+        }
         composable("profile") {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
         }
         composable("yourSituation") {
             YourSituationScreen(
                 onPregnantClick = { navController.navigate("pregnantForm") },
-                onAlreadyHaveBabiesClick = { navController.navigate("motherForm") }
+                onAlreadyHaveBabiesClick = { navController.navigate("motherForm") },
+                onBackClick = { navController.navigate("home") }
             )
         }
         composable("pregnantForm") {
@@ -71,11 +85,13 @@ fun MainApp() {
                 userAge = "29",
                 onSubmit = { formData ->
                     println("Formulaire soumis : $formData")
-                }
+                },
+                navController = navController
             )
         }
         composable("motherForm") {
             MotherForm(
+                navController = navController,
                 onAddBabyClick = { navController.navigate("babyForm") }
             )
         }
@@ -86,11 +102,24 @@ fun MainApp() {
             )
         }
         composable("dailyCheck") {
-            DailyCheckInScreen() // Ajoutez cette ligne
+            DailyCheckInScreen(navController = navController)
         }
+        composable("todo") {
+            ToDoScreen(navController = navController)
+        }
+        composable("taskDetails") {
+            TaskDetailsScreen(navController = navController)
+        }
+        composable("healthAppHome") {
+            HealthAppHomeScreen(navController = navController)
+        }
+        composable("doctorProfile") {
+            DoctorProfileScreen(navController = navController)
+
+        }
+
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
