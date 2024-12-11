@@ -29,9 +29,9 @@ sealed class BottomBarScreen(
         title = "Content",
         icon = Icons.Default.Search
     )
-    object Profile : BottomBarScreen(
-        route = "profile",
-        title = "Profile",
+    object Discussions : BottomBarScreen(
+        route = "discussions",
+        title = "discussions",
         icon = Icons.Default.Person
     )
 

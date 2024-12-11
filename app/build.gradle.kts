@@ -90,6 +90,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
+    // Accompanist Pager (pour le défilement horizontal)
+    implementation("com.google.accompanist:accompanist-pager:0.30.1")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+
     // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

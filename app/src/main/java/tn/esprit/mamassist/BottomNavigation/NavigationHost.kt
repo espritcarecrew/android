@@ -7,10 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import tn.esprit.mamassist.BottomNavigation.BottomNavGraph
-import tn.esprit.mamassist.Login.LoginScreen
-import tn.esprit.mamassist.Login.LoginViewModel
-import tn.esprit.mamassist.Register.RegisterScreen
+import tn.esprit.mamassist.Authentification.connecte.LoginScreen
+import tn.esprit.mamassist.Authentification.connecte.LoginViewModel
+import tn.esprit.mamassist.Authentification.inscrire.RegisterScreen
 import tn.esprit.mamassist.data.network.ApiClient
 import tn.esprit.mamassist.data.repository.UserRepository
 

@@ -23,7 +23,7 @@ fun BottomNavGraph(navController: NavHostController, paddingValues: PaddingValue
         composable(route = BottomBarScreen.Tools.route) {
             ToolsScreen(navController = navController)
         }
-        composable(route = BottomBarScreen.Profile.route) {
+        composable(route = BottomBarScreen.Discussions.route) {
             ProfileScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Content.route) {

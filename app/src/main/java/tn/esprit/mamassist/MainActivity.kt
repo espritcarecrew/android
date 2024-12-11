@@ -1,5 +1,6 @@
 package tn.esprit.mamassist
 
+import MainInterface
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,15 +9,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import tn.esprit.mamassist.Authentification.InscrireScreenWithPager
 import tn.esprit.mamassist.BottomNavigation.HomeScreen
 import tn.esprit.mamassist.BottomNavigation.ProfileScreen
-import tn.esprit.mamassist.Login.LoginScreen
-import tn.esprit.mamassist.Login.LoginViewModel
+import tn.esprit.mamassist.Authentification.connecte.LoginScreen
+import tn.esprit.mamassist.Authentification.connecte.LoginViewModel
 import tn.esprit.mamassist.MamaAvecBebe.BabyForm
 import tn.esprit.mamassist.MamaAvecBebe.MotherForm
 import tn.esprit.mamassist.Pregnant.PregnantFormScreen
 import tn.esprit.mamassist.Tools.DailyCheckInScreen
-import tn.esprit.mamassist.Register.RegisterScreen
+import tn.esprit.mamassist.Authentification.inscrire.RegisterScreen
 import tn.esprit.mamassist.Tools.TaskDetailsScreen
 import tn.esprit.mamassist.Tools.ToolsScreen
 import tn.esprit.mamassist.data.network.ApiClient
@@ -37,14 +39,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
-
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "inscrire") {
+        composable("inscrire") {
+            InscrireScreenWithPager(navController = navController)
+        }
         composable("login") {
             val apiService = ApiClient.getApiService()
             val userRepository = UserRepository(apiService)
@@ -52,7 +54,7 @@ fun MainApp() {
             LoginScreen(
                 viewModel = loginViewModel,
                 onNavigateToRegister = { navController.navigate("register") },
-                onLoginSuccess = { navController.navigate("home") }
+                onLoginSuccess = { navController.navigate("maininterface") }
             )
         }
         composable("register") {
@@ -115,9 +117,9 @@ fun MainApp() {
         }
         composable("doctorProfile") {
             DoctorProfileScreen(navController = navController)
-
         }
-
+        composable("maininterface") {
+            MainInterface(navController = navController)        }
     }
 }
 

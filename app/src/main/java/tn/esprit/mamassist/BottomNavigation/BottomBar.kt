@@ -17,7 +17,7 @@ fun BottomBar(navController: NavHostController) { // Updated to NavHostControlle
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Tools,
-        BottomBarScreen.Profile,
+        BottomBarScreen.Discussions,
         BottomBarScreen.Content,
     )
 
