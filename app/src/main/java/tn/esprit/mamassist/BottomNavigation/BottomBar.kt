@@ -16,10 +16,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomBar(navController: NavHostController) { // Updated to NavHostController
     val screens = listOf(
         BottomBarScreen.Home,
-        BottomBarScreen.Tools,
+        BottomBarScreen.Doctor,
         BottomBarScreen.Discussions,
-        BottomBarScreen.Content,
-    )
+        BottomBarScreen.Tools,
+
+        )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

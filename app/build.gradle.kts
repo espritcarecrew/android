@@ -77,6 +77,7 @@ dependencies {
     // Room for local databases
     implementation("androidx.room:room-runtime:2.6.1")
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.generativeai)
     kapt("androidx.room:room-compiler:2.6.1")
 
     // ConstraintLayout for Compose

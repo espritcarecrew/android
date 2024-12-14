@@ -19,6 +19,15 @@ import tn.esprit.mamassist.MamaAvecBebe.MotherForm
 import tn.esprit.mamassist.Pregnant.PregnantFormScreen
 import tn.esprit.mamassist.Tools.DailyCheckInScreen
 import tn.esprit.mamassist.Authentification.inscrire.RegisterScreen
+import tn.esprit.mamassist.Home.pression.BloodPressureInstructionsScreen
+import tn.esprit.mamassist.Home.Chat.MedicalHelpScreen
+import tn.esprit.mamassist.Home.WeightTrackerScreen
+import tn.esprit.mamassist.Home.pression.BloodPressureInputScreen
+import tn.esprit.mamassist.Pregnant.BabyGrowthScreen
+import tn.esprit.mamassist.Pregnant.PregnancyToolsScreen
+import tn.esprit.mamassist.Pregnant.PregnancyTrackerScreen
+import tn.esprit.mamassist.Pregnant.PregnancyTrackingScreen
+import tn.esprit.mamassist.Pregnant.SymptomsScreen
 import tn.esprit.mamassist.Tools.TaskDetailsScreen
 import tn.esprit.mamassist.Tools.ToolsScreen
 import tn.esprit.mamassist.data.network.ApiClient
@@ -26,6 +35,7 @@ import tn.esprit.mamassist.data.network.Baby
 import tn.esprit.mamassist.data.repository.UserRepository
 import tn.esprit.mamassist.doctor.DoctorProfileScreen
 import tn.esprit.mamassist.doctor.HealthAppHomeScreen
+import tn.esprit.mamassist.screens.ArticleDetailScreen
 import tn.esprit.mamassist.ui.theme.MamAssistTheme
 
 class MainActivity : ComponentActivity() {
@@ -74,6 +84,15 @@ fun MainApp() {
         composable("profile") {
             ProfileScreen(navController = navController)
         }
+        composable("doctor") {
+            HealthAppHomeScreen(navController = navController)
+        }
+        composable("discussions") {
+            MedicalHelpScreen(navController = navController)
+        }
+        composable("PregnancyTrackerScreen") {
+            PregnancyTrackerScreen(navController = navController)
+        }
         composable("yourSituation") {
             YourSituationScreen(
                 onPregnantClick = { navController.navigate("pregnantForm") },
@@ -81,16 +100,21 @@ fun MainApp() {
                 onBackClick = { navController.navigate("home") }
             )
         }
+        composable("pregnancyTracking") {
+            PregnancyTrackingScreen(navController = navController)
+        }
+        composable("PregnancyToolsScreen") {
+            PregnancyToolsScreen(navController = navController)
+        }
         composable("pregnantForm") {
             PregnantFormScreen(
-                userName = "Marie Dupont",
-                userAge = "29",
-                onSubmit = { formData ->
-                    println("Formulaire soumis : $formData")
-                },
+                userName = null,
+                userAge = null,
+                onSubmit = { /* Action après soumission */ },
                 navController = navController
             )
         }
+
         composable("motherForm") {
             MotherForm(
                 navController = navController,
@@ -119,7 +143,25 @@ fun MainApp() {
             DoctorProfileScreen(navController = navController)
         }
         composable("maininterface") {
-            MainInterface(navController = navController)        }
+             MainInterface(navController = navController)
+        }
+        composable("BloodPressureInstructionsScreen") {
+            BloodPressureInstructionsScreen(navController = navController)
+        }
+        composable("SymptomsScreen") {
+            SymptomsScreen(navController = navController)
+        }
+        composable("medicalHelpScreen") { MedicalHelpScreen(navController = navController) }
+        composable("articleDetail/{articleIndex}") { backStackEntry ->
+            val articleIndex = backStackEntry.arguments?.getString("articleIndex")?.toInt() ?: 0
+            ArticleDetailScreen(navController = navController, articleIndex = articleIndex)
+        }
+        composable("bloodPressureInputScreen") {
+            BloodPressureInputScreen(navController = navController) // Assurez-vous que cette fonction existe
+        }
+        composable("WeightTrackerScreen") { WeightTrackerScreen(navController = navController) }
+        composable("BabyGrowthScreen") { BabyGrowthScreen(navController = navController) }
+
     }
 }
 

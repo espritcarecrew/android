@@ -20,7 +20,7 @@ data class LoginUiState(
     val hasNavigated: Boolean = false
 )
 
-class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
+open class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     private var _loginUiState: MutableLiveData<LoginUiState> = MutableLiveData(LoginUiState())
     val loginUiState: LiveData<LoginUiState> get() = _loginUiState // Expose as LiveData

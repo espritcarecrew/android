@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,9 +17,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun MedicalHelpScreen(onAskQuestionClick: () -> Unit = {}) {
+fun MedicalHelpScreen(navController: NavController, onAskQuestionClick: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,6 +41,12 @@ fun MedicalHelpScreen(onAskQuestionClick: () -> Unit = {}) {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
+            IconButton(onClick = { navController.navigate("maininterface") }) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close"
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Notre équipe médicale répond à toutes vos questions liées à la grossesse et au post-partum sous 48 h",
@@ -109,5 +118,5 @@ fun MedicalHelpScreen(onAskQuestionClick: () -> Unit = {}) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMedicalHelpScreen() {
-    MedicalHelpScreen()
+    MedicalHelpScreen(navController = rememberNavController())
 }

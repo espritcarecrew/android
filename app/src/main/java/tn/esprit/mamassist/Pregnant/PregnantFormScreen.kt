@@ -57,7 +57,7 @@ fun PregnantFormScreen(
                 text = "Formulaire Santé Grossesse",
                 style = MaterialTheme.typography.titleLarge
             )
-            IconButton(onClick = { navController.navigate("yourSituation") }) {
+            IconButton(onClick = { navController.navigate("maininterface") }) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close"
@@ -200,6 +200,7 @@ fun PregnantFormScreen(
                     notes
                 )
                 onSubmit(formData)
+                navController.navigate("symptomsScreen") // Navigation vers SymptomsScreen
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {

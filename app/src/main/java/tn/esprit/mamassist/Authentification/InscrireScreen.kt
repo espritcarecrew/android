@@ -68,7 +68,7 @@ fun InscrireScreenWithPager(navController: NavController) {
                     Image(
                         painter = painterResource(id = R.drawable.pregnant_network), // Remplacez par votre ressource
                         contentDescription = "Image 2",
-                        modifier = Modifier.size(300.dp)
+                        modifier = Modifier.size(500.dp)
                     )
                     Text(
                         text = "Ayez recours à un suivi médical personnalisé de votre grossesse",

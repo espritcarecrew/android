@@ -18,9 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.api.Response
 import tn.esprit.mamassist.R
+import tn.esprit.mamassist.data.repository.UserRepository
 import tn.esprit.mamassist.ui.theme.VSky
 import java.util.regex.Pattern
 
@@ -43,14 +46,21 @@ fun LoginScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Image de fond
-        Image(
-            painter = painterResource(id = R.drawable.loggin),
-            contentDescription = "logo happy",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally // Centre horizontalement
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.loggin),
+                    contentDescription = "logo happy",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(250.dp)
+                )
+            }
 
-        // Contenu principal
+                    // Contenu principal
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -209,3 +219,4 @@ fun AuthOption(image: Int, onClick: () -> Unit) {
         )
     }
 }
+

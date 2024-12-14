@@ -57,29 +57,27 @@ fun MainInterface(navController: NavHostController) {
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color(0xFFD2A27A) // Set the background color
+                    containerColor = Color(0xFFD2A27A)
                 )
             )
         },
-        bottomBar = { BottomBar(navController) }, // Ajout de la barre de navigation
+        bottomBar = { BottomBar(navController) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Appliquer le padding fourni par Scaffold
+                    .padding(paddingValues)
                     .background(Color(0xFFF6F6F6))
-                    .verticalScroll(rememberScrollState()) // Permet le scrolling vertical
+                    .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                InformationSection(navController = navController)
+                InformationSection(navController)
                 Spacer(modifier = Modifier.height(16.dp))
-                ActionButtons()
+                ActionButtons(navController)
                 Spacer(modifier = Modifier.height(16.dp))
-                Action()
+                Action(navController)
                 Spacer(modifier = Modifier.height(16.dp))
-                PractitionerButton()
-                Spacer(modifier = Modifier.height(16.dp))
-                WhoAreYouSection()
+                WhoAreYouSection(navController)
                 Spacer(modifier = Modifier.height(16.dp))
                 TodayQuestionSection()
                 Spacer(modifier = Modifier.height(16.dp))
@@ -87,94 +85,6 @@ fun MainInterface(navController: NavHostController) {
             }
         }
     )
-}
-
-@Composable
-fun PractitionerButton() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFFCE4EC), shape = CircleShape)
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "À nos praticiens",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFFD81B60)
-        )
-    }
-}
-@Composable
-fun WhoAreYouSection() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Hey, who are you?",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { /* Action for "I'm pregnant" */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE3DFFF)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "I'm pregnant", color = Color(0xFF6200EA))
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { /* Action for "I have children" */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFCE4EC)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "I have children", color = Color(0xFFD81B60))
-        }
-    }
-}
-@Composable
-fun TodayQuestionSection() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Today's question",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "How are you feeling today?",
-            fontSize = 14.sp,
-            color = Color(0xFF666666)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { /* Action for "As usual" */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFB3E5FC)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "As usual", color = Color(0xFF0288D1))
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { /* Action for "Nauseous" */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFF9C4)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Nauseous", color = Color(0xFFFBC02D))
-        }
-    }
 }
 @Composable
 fun MoodButton(onClick: () -> Unit) {
@@ -220,6 +130,119 @@ fun MoodButton(onClick: () -> Unit) {
     }
 }
 @Composable
+fun TodayQuestionSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Today's question",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "How are you feeling today?",
+            fontSize = 14.sp,
+            color = Color(0xFF666666)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { /* Action for "As usual" */ },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFB3E5FC)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "As usual", color = Color(0xFF0288D1))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { /* Action for "Nauseous" */ },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFB3E5FC)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Nauseous", color = Color(0xFF0288D1))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { /* Action for "Nauseous" */ },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFB3E5FC)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Mole pain", color = Color(0xFF0288D1))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { /* Action for "Nauseous" */ },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFB3E5FC)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Strange", color = Color(0xFF0288D1))
+        }
+    }
+}
+@Composable
+fun ActionButtons(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = { /* Action for first button */ },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6200EA)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "What Happens in Months", color = Color.White)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { navController.navigate("medicalHelpScreen")  },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF06292)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Posez vos questions à nos praticiens", color = Color.White)
+        }
+    }
+}
+@Composable
+fun WhoAreYouSection(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Hey, who are you?",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { navController.navigate("pregnancyTracking") },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE3DFFF)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "I'm pregnant", color = Color(0xFF6200EA))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { /* Action for "I have children" */ },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE3DFFF)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "I have children", color = Color(0xFF6200EA))
+        }
+    }
+}
+
+@Composable
 fun InformationSection(navController: NavController) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -252,56 +275,30 @@ fun InformationSection(navController: NavController) {
                     contentScale = ContentScale.Crop
                 )
                 Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                contentAlignment = Alignment.BottomStart
-                ) {
-                androidx.compose.material3.Text(
-                    text = "Article ${index + 1}",
-                    color = Color.White,
-                    fontSize = 18.sp,
                     modifier = Modifier
-                        .background(
-                            Color(0xAA000000),
-                            RoundedCornerShape(8.dp)
-                        )
-                        .padding(8.dp)
-                )
-            }
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.BottomStart
+                ) {
+                    androidx.compose.material3.Text(
+                        text = "Article ${index + 1}",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .background(
+                                Color(0xAA000000),
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(8.dp)
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun ActionButtons() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = { /* Action for first button */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6200EA)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "What Happens in Months", color = Color.White)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { /* Action for second button */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF06292)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Posez vos questions à nos praticiens", color = Color.White)
-        }
-    }
-}
-
-@Composable
-fun Action() {
+fun Action(navController: NavController) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
@@ -311,35 +308,39 @@ fun Action() {
             .padding(vertical = 16.dp)
     ) {
         ActionItem(
-            imageRes = R.drawable.scale, // Remplacez par votre ressource
-            imageSize = 60.dp, // Taille de cette image spécifique
-            hasBadge = true
+            imageRes = R.drawable.scale,
+            imageSize = 60.dp,
+            hasBadge = true,
+            onClick = { navController.navigate("WeightTrackerScreen") }
         )
         ActionItem(
-            imageRes = R.drawable.heart, // Remplacez par votre ressource
-            imageSize = 80.dp, // Taille différente pour cette image
-            hasBadge = true
+            imageRes = R.drawable.heart,
+            imageSize = 80.dp,
+            hasBadge = true,
+            onClick = { navController.navigate("BloodPressureInstructionsScreen") }
         )
         ActionItem(
-            imageRes = R.drawable.stethoscope, // Remplacez par votre ressource
-            imageSize = 80.dp, // Encore une taille différente
-            hasBadge = true
+            imageRes = R.drawable.stethoscope,
+            imageSize = 80.dp,
+            hasBadge = true,
+            onClick = { navController.navigate("SymptomsScreen") }
         )
     }
 }
 
 @Composable
-fun ActionItem(imageRes: Int, imageSize: Dp, hasBadge: Boolean) {
+fun ActionItem(imageRes: Int, imageSize: Dp, hasBadge: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(80.dp)
-            .background(Color(0xFFFCE4EC), shape = CircleShape), // Couleur du cercle
+            .background(Color(0xFFFCE4EC), shape = CircleShape)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = imageRes),
             contentDescription = null,
-            modifier = Modifier.size(imageSize) // Utilisation directe de la taille personnalisée
+            modifier = Modifier.size(imageSize)
         )
         if (hasBadge) {
             Box(
