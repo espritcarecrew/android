@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,85 +20,65 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import tn.esprit.mamassist.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DoctorProfileScreen(navController: NavHostController) {
+fun DoctorProfileScreen(navController: NavController) {
     var selectedTime by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf(21) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Doctor Profile", color = Color.White) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF536DFE))
-            )
-        }
-    ) { paddingValues ->
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Header with doctor info
+        DoctorHeader()
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Additional Information Section
+        DoctorAdditionalInfo()
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Date selection
+        DateSelection(
+            selectedDate = selectedDate,
+            onDateSelected = { selectedDate = it }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Time slots
+        TimeSlotSection(
+            sectionTitle = "Morning",
+            times = listOf("08:30 AM", "09:00 AM", "09:30 AM", "10:00 AM"),
+            selectedTime = selectedTime,
+            onTimeSelected = { selectedTime = it }
+        )
+
+        TimeSlotSection(
+            sectionTitle = "Evening",
+            times = listOf("05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM"),
+            selectedTime = selectedTime,
+            onTimeSelected = { selectedTime = it }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Book Appointment Button
+        Button(
+            onClick = { /* Handle booking logic */ },
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues) // Utilisation de paddingValues pour gérer le contenu
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))
         ) {
-            // Header with doctor info
-            DoctorHeader()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Additional Information Section
-            DoctorAdditionalInfo()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Date selection
-            DateSelection(
-                selectedDate = selectedDate,
-                onDateSelected = { selectedDate = it }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Time slots
-            TimeSlotSection(
-                sectionTitle = "Morning",
-                times = listOf("08:30 AM", "09:00 AM", "09:30 AM", "10:00 AM"),
-                selectedTime = selectedTime,
-                onTimeSelected = { selectedTime = it }
-            )
-
-            TimeSlotSection(
-                sectionTitle = "Evening",
-                times = listOf("05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM"),
-                selectedTime = selectedTime,
-                onTimeSelected = { selectedTime = it }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Book Appointment Button
-            Button(
-                onClick = { /* Handle booking logic */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))
-            ) {
-                Text(text = "BOOK AN APPOINTMENT", color = Color.White, fontSize = 16.sp)
-            }
+            Text(text = "BOOK AN APPOINTMENT", color = Color.White, fontSize = 16.sp)
         }
     }
 }
@@ -115,7 +94,7 @@ fun DoctorHeader() {
     ) {
         // Doctor Image
         Image(
-            painter = painterResource(id = R.drawable.doctor),
+            painter = painterResource(id = R.drawable.doctor), // Assurez-vous que cette ressource existe
             contentDescription = "Doctor Image",
             modifier = Modifier
                 .size(100.dp)
@@ -163,6 +142,7 @@ fun DoctorAdditionalInfo() {
             .background(Color.White, RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
+        // Title
         Text(
             text = "Doctor's Details",
             fontSize = 18.sp,
@@ -174,6 +154,7 @@ fun DoctorAdditionalInfo() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Experience
         Text(
             text = "Experience: 15 years",
             fontSize = 14.sp,
@@ -183,6 +164,7 @@ fun DoctorAdditionalInfo() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Specialization
         Text(
             text = "Specialization: Cardiothoracic Surgery",
             fontSize = 14.sp,
@@ -192,6 +174,7 @@ fun DoctorAdditionalInfo() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Contact Information
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "Contact: ",
@@ -209,6 +192,7 @@ fun DoctorAdditionalInfo() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Location
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "Location: ",
@@ -270,6 +254,7 @@ fun TimeSlotSection(
 ) {
     Column {
         Text(
+
             text = sectionTitle,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
@@ -299,11 +284,37 @@ fun TimeSlotSection(
         }
     }
     Spacer(modifier = Modifier.height(15.dp))
+
+
+    Column {
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            times.forEach { time ->
+                Box(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(40.dp)
+                        .background(
+                            if (time == selectedTime) Color(0xFF536DFE) else Color.LightGray,
+                            RoundedCornerShape(8.dp)
+                        )
+                        .clickable { onTimeSelected(time) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = time,
+                        color = if (time == selectedTime) Color.White else Color.Black,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewDoctorProfileScreen() {
-    val fakeNavController = rememberNavController()
-    DoctorProfileScreen(navController = fakeNavController)
+fun PreviewAppointmentScreen() {
+    DoctorProfileScreen(navController = rememberNavController())
 }

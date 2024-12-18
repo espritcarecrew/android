@@ -107,7 +107,7 @@ fun BloodPressureInstructionsScreen(navController: NavController) {
 
                 // Bouton D'accord
                 Button(
-                    onClick = { navController.navigate("bloodPressureInputScreen") },
+                    onClick = { navController.navigate("PredictionScreen") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

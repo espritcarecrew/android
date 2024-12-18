@@ -1,6 +1,7 @@
 package tn.esprit.mamassist.Authentification.inscrire
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,18 +29,33 @@ import tn.esprit.mamassist.R
 import tn.esprit.mamassist.ui.theme.MamAssistTheme
 import tn.esprit.mamassist.ui.theme.VSky
 @Composable
-fun RegisterScreen(onNavigateToLogin: () -> Unit) {
+fun RegisterScreen(viewModel: RegisterViewModel,onNavigateToLogin: () -> Unit) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var bio by remember { mutableStateOf("") }
+    var role by remember { mutableStateOf("usernormal") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val signUpState by viewModel.signUpUiState.observeAsState()
+    LaunchedEffect(signUpState?.isSignedUp) {
+        if (signUpState?.isSignedUp == true) {
+            Log.d("RegisterScreen", "Navigating to InscrireScreenWithPager")
+            onNavigateToLogin()
+        }
+    }
 
+    signUpState?.errorMessage?.let { error ->
+        Text(text = error, color = Color.Red)
+    }
+
+    if (signUpState?.isLoading == true) {
+        CircularProgressIndicator()
+    }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri -> imageUri = uri }
     )
-
+    val roles = listOf("usernormal", "medecin")
     // Appliquer le thème clair spécifiquement pour cet écran
     MamAssistTheme() { // Ici, on force le thème clair
         Box(modifier = Modifier.fillMaxSize()) {
@@ -116,9 +133,25 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                     label = { Text(text = "Short Bio") },
                     modifier = Modifier.fillMaxWidth().padding(20.dp)
                 )
+                Box {
+                    Text("Role:")
+                    var expanded by remember { mutableStateOf(false) }
+                    Text(role, Modifier.clickable { expanded = true })
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                        roles.forEach {
+                            DropdownMenuItem(
+                                text = { Text(it) },
+                                onClick = { role = it; expanded = false }
+                            )
+                        }
+                    }}
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
-                    onClick = { /* Handle registration logic */ },
+                    onClick = {
+                        Log.d("RegisterScreen", "Register button clicked")
+                        viewModel.signUpUser(name, email, password, bio, imageUri.toString(), role)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = VSky)
                 ) {
@@ -144,10 +177,4 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterScreen() {
-    MamAssistTheme(darkTheme = false) { // Force a light theme in the preview
-        RegisterScreen(onNavigateToLogin = {})
-    }
-}
+

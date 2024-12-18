@@ -22,47 +22,36 @@ data class SignUpUiState(
 
 class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    private var _signUpUiState: MutableLiveData<SignUpUiState> = MutableLiveData(SignUpUiState())
-    val signUpUiState: LiveData<SignUpUiState> get() = _signUpUiState // Expose as LiveData
+    private val _signUpUiState: MutableLiveData<SignUpUiState> = MutableLiveData(SignUpUiState())
+    val signUpUiState: LiveData<SignUpUiState> get() = _signUpUiState
 
-    // Function to handle user sign-up
-    fun signUpUser(name: String, email: String, password: String) {
+    fun signUpUser(
+        name: String,
+        email: String,
+        password: String,
+        bio: String,
+        imageUri: String,
+        role: String
+    ) {
         viewModelScope.launch {
-            _signUpUiState.value = SignUpUiState(isLoading = true)  // Set loading state
-            Log.d("SignUpViewModel", "Sign-up request started for email: $email")  // Log start of request
-
+            _signUpUiState.value = SignUpUiState(isLoading = true)
             try {
-                // Log the request body details
-                Log.d("SignUpRequest", "Request Body: name=$name, email=$email, password=$password")
-
-                // Make the sign-up request
-                val response: Response<SignUpResponse> = userRepository.signUp(name, email, password)
+                val response = userRepository.signUp(name, email, password, bio, imageUri, role)
+                Log.d("RegisterViewModel", "Réponse reçue: ${response.body()} - Code: ${response.code()}")
 
                 if (response.isSuccessful) {
-                    // Log success if the response is successful
-                    Log.d("SignUpResponse", "Sign-up successful: ${response.body()}")
-
-                    val userResponse = response.body()
-                    if (userResponse != null) {
-                        _signUpUiState.value = SignUpUiState(
-                            isSignedUp = true,
-                            user = userResponse,
-                            successMessage = "Sign-up successful!",
-                            hasNavigated = true  // Mark as navigated
-                        )
-                    } else {
-                        // Handle case where response body is null
-                        _signUpUiState.value = SignUpUiState(errorMessage = "Sign-up failed: No response body")
-                    }
+                    Log.d("RegisterViewModel", "Succès de l'inscription : ${response.body()}")
+                    _signUpUiState.value = SignUpUiState(
+                        isSignedUp = true,
+                        successMessage = "Sign-up successful!"
+                    )
                 } else {
-                    // Log error if the response is not successful
-                    Log.e("SignUpError", "Sign-up failed with code ${response.code()}: ${response.message()}")
+                    Log.e("RegisterViewModel", "Erreur d'inscription : ${response.errorBody()?.string()}")
                     _signUpUiState.value = SignUpUiState(errorMessage = "Sign-up failed: ${response.message()}")
                 }
             } catch (e: Exception) {
-                // Log exception if something goes wrong
-                Log.e("SignUpError", "Exception during sign-up: ${e.message}")
-                _signUpUiState.value = SignUpUiState(errorMessage = e.message)
+                Log.e("RegisterViewModel", "Exception lors de l'inscription: ${e.message}")
+                _signUpUiState.value = SignUpUiState(errorMessage = "Exception: ${e.message}")
             }
         }
     }

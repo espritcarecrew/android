@@ -4,15 +4,28 @@ import retrofit2.Response
 import tn.esprit.mamassist.data.network.ApiService
 import tn.esprit.mamassist.data.network.LoginRequest
 import tn.esprit.mamassist.data.network.LoginResponse
-import tn.esprit.mamassist.data.network.SignUpRequest
 import tn.esprit.mamassist.data.network.SignUpResponse
 
 class UserRepository(private val apiService: ApiService) {
-
+    data class SignUpRequest(
+        val username: String, // Remplacer "name" par "username"
+        val email: String,
+        val password: String,
+        val bio: String,
+        val imageUri: String?,
+        val role: String
+    )
     // Function to create a new user using the API with error handling
-    suspend fun signUp(name: String, email: String, password: String): Response<SignUpResponse> {
-        val signUpRequest = SignUpRequest(name, email, password)
-        return apiService.signUp(signUpRequest)
+    suspend fun signUp(
+        username: String, // Modifier ici aussi
+        email: String,
+        password: String,
+        bio: String,
+        imageUri: String?,
+        role: String
+    ): Response<SignUpResponse> {
+        val request = SignUpRequest(username, email, password, bio, imageUri, role)
+        return apiService.signUp(request)
     }
 
     // Function to login a user

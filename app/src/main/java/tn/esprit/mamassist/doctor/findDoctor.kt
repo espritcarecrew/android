@@ -15,7 +15,11 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +30,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import tn.esprit.mamassist.BottomNavigation.BottomBar
@@ -50,14 +54,17 @@ fun HealthAppHomeScreen(navController: NavHostController) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
+            // Header Section
             HeaderSection()
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Search Bar
             SearchBar()
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Categories
             Text(
                 text = "Categories",
                 fontWeight = FontWeight.Bold,
@@ -68,13 +75,15 @@ fun HealthAppHomeScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Recommended Doctors
             SectionWithSeeAll("Recommended Doctors")
             RecommendedDoctorsSection()
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Consultation Schedule
             SectionWithSeeAll("Consultation Schedule")
-            ConsultationSchedule(navController = navController) // Pass navController here
+            ConsultationSchedule()
         }
     }
 }
@@ -264,7 +273,7 @@ fun RecommendedDoctorsSection() {
 }
 
 @Composable
-fun ConsultationSchedule(navController: NavHostController) {
+fun ConsultationSchedule() {
     val doctors = listOf(
         "Dr. Jackson Moraes\nDermatology",
         "Dr. Amelia Daniel\nDermatologist",
@@ -283,7 +292,6 @@ fun ConsultationSchedule(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(Color.White, RoundedCornerShape(16.dp))
                     .padding(16.dp)
-                    .clickable { navController.navigate("doctorProfile") } // Navigate to Doctor Profile
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(

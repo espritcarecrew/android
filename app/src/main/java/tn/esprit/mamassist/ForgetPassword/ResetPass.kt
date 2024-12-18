@@ -19,7 +19,7 @@ import retrofit2.Response
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import tn.esprit.mamassist.RetrofitClient
+import tn.esprit.mamassist.data.network.ApiClient
 import tn.esprit.mamassist.data.network.ResetPasswordRequest
 import tn.esprit.mamassist.data.network.Routes
 
@@ -97,7 +97,7 @@ fun ResetPass(navController: NavController) {
                     if (email.isNotEmpty() && code.isNotEmpty() && newPassword.isNotEmpty()) {
                         isLoading = true
                         // Send API request to reset password
-                        RetrofitClient.getApiService().resetPassword(request = ResetPasswordRequest(email, code, newPassword))
+                        ApiClient.apiService.resetPassword(request = ResetPasswordRequest(email, code, newPassword))
                             .enqueue(object : Callback<Void> {
                                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                     isLoading = false

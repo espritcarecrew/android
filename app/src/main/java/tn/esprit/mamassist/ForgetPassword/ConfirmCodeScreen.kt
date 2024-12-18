@@ -22,7 +22,7 @@ import okhttp3.Route
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import tn.esprit.mamassist.RetrofitClient
+import tn.esprit.mamassist.data.network.ApiClient
 import tn.esprit.mamassist.data.network.Routes
 import tn.esprit.mamassist.data.network.VerifyCodeRequest
 import tn.esprit.mamassist.data.network.VerifyCodeResponse
@@ -94,7 +94,7 @@ fun ConfirmCodeScreen(navController: NavController) {
                     if (email.isNotEmpty() && code.length == 4) {
                         isLoading = true
                         coroutineScope.launch {
-                            RetrofitClient.getApiService().verifyResetCode(VerifyCodeRequest(email, code))
+                            ApiClient.apiService.verifyResetCode(VerifyCodeRequest(email, code))
                                 .enqueue(object : Callback<VerifyCodeResponse> {
                                     override fun onResponse(
                                         call: Call<VerifyCodeResponse>,

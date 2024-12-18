@@ -15,6 +15,8 @@ import tn.esprit.mamassist.data.repository.UserRepository
 data class LoginUiState(
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
+    val userId: String? = null,
+
     val token: String? = null,
     val errorMessage: String? = null,
     val hasNavigated: Boolean = false
@@ -31,38 +33,33 @@ open class LoginViewModel(private val userRepository: UserRepository) : ViewMode
         sharedPreferences.edit().clear().apply() // Clear all preferences
     }
     // Function to handle user login
-    fun loginUser(email: String, password: String) {
+    fun loginUser(email: String, password: String,  onError: (String) -> Unit) {
         viewModelScope.launch {
-            _loginUiState.value = LoginUiState(isLoading = true)  // Set loading state
+            _loginUiState.value = LoginUiState(isLoading = true) // Loading
 
             try {
-                // Make the login request
-                val response: Response<LoginResponse> = userRepository.login(email, password)
+                val response = userRepository.login(email, password)
 
                 if (response.isSuccessful) {
-                    // Extract tokens and user ID from the response
                     val loginResponse = response.body()
-                    print(loginResponse)
                     if (loginResponse != null) {
-                        val accessToken = loginResponse.accessToken
-                        val refreshToken = loginResponse.refreshToken
+                        val isLoggedIn = true
                         val userId = loginResponse.userId
+                        val accessToken = loginResponse.accessToken
 
-                        // Update state with success
                         _loginUiState.value = LoginUiState(isLoggedIn = true, token = accessToken)
-                        // Optionally, you can store refreshToken and userId if needed
                     } else {
-                        // Handle case where response body is null
-                        _loginUiState.value = LoginUiState(errorMessage = "Login failed: No response body")
+                        onError("Invalid response from server")
                     }
                 } else {
-                    // Update state with error message
-                    _loginUiState.value = LoginUiState(errorMessage = "Login failed: ${response.message()}")
+                    onError("Login failed: ${response.message()}")
                 }
             } catch (e: Exception) {
-                // Handle exceptions during the network call
-                _loginUiState.value = LoginUiState(errorMessage = e.message)
+                onError("Error: ${e.message}")
+            } finally {
+                _loginUiState.value = LoginUiState(isLoading = false)
             }
         }
     }
+
 }

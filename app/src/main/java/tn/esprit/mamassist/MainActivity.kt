@@ -1,10 +1,12 @@
 package tn.esprit.mamassist
 
 import MainInterface
+import SharedPreferencesManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,10 +21,12 @@ import tn.esprit.mamassist.MamaAvecBebe.MotherForm
 import tn.esprit.mamassist.Pregnant.PregnantFormScreen
 import tn.esprit.mamassist.Tools.DailyCheckInScreen
 import tn.esprit.mamassist.Authentification.inscrire.RegisterScreen
+import tn.esprit.mamassist.Authentification.inscrire.RegisterViewModel
+import tn.esprit.mamassist.Home.Chat.AskQuestionScreen
 import tn.esprit.mamassist.Home.pression.BloodPressureInstructionsScreen
 import tn.esprit.mamassist.Home.Chat.MedicalHelpScreen
 import tn.esprit.mamassist.Home.WeightTrackerScreen
-import tn.esprit.mamassist.Home.pression.BloodPressureInputScreen
+import tn.esprit.mamassist.Home.pression.PredictionScreen
 import tn.esprit.mamassist.Pregnant.BabyGrowthScreen
 import tn.esprit.mamassist.Pregnant.PregnancyToolsScreen
 import tn.esprit.mamassist.Pregnant.PregnancyTrackerScreen
@@ -52,24 +56,43 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
+    val apiService = ApiClient.apiService
+    val userRepository = UserRepository(apiService)
+    val registerViewModel = RegisterViewModel(userRepository)
 
     NavHost(navController = navController, startDestination = "inscrire") {
         composable("inscrire") {
             InscrireScreenWithPager(navController = navController)
         }
         composable("login") {
-            val apiService = ApiClient.getApiService()
-            val userRepository = UserRepository(apiService)
             val loginViewModel = LoginViewModel(userRepository)
+            val context = LocalContext.current
+
             LoginScreen(
                 viewModel = loginViewModel,
                 onNavigateToRegister = { navController.navigate("register") },
-                onLoginSuccess = { navController.navigate("maininterface") }
+                onLoginSuccess = { userId ->
+                    SharedPreferencesManager(context).saveUserId(userId) // Sauvegarde l'userId
+                    navController.navigate("maininterface") // Navigation après succès
+                }
             )
+        }
+
+        composable("askQuestion") {
+            AskQuestionScreen()
+        }
+
+        composable("PredictionScreen") {
+            PredictionScreen()
+        }
+        composable("articleDetail/{articleIndex}") { backStackEntry ->
+            val articleIndex = backStackEntry.arguments?.getString("articleIndex")?.toIntOrNull() ?: 0
+            ArticleDetailScreen(navController = navController, articleIndex = articleIndex)
         }
         composable("register") {
             RegisterScreen(
-                onNavigateToLogin = { navController.navigate("login") }
+                viewModel = registerViewModel,
+                onNavigateToLogin = { navController.navigate("inscrire") } // Navigation vers root
             )
         }
         composable("home") {
@@ -78,9 +101,7 @@ fun MainApp() {
         composable("tools") {
             ToolsScreen(navController = navController)
         }
-        composable("content") {
-            ContentScreen(navController = navController)
-        }
+
         composable("profile") {
             ProfileScreen(navController = navController)
         }
@@ -156,9 +177,7 @@ fun MainApp() {
             val articleIndex = backStackEntry.arguments?.getString("articleIndex")?.toInt() ?: 0
             ArticleDetailScreen(navController = navController, articleIndex = articleIndex)
         }
-        composable("bloodPressureInputScreen") {
-            BloodPressureInputScreen(navController = navController) // Assurez-vous que cette fonction existe
-        }
+
         composable("WeightTrackerScreen") { WeightTrackerScreen(navController = navController) }
         composable("BabyGrowthScreen") { BabyGrowthScreen(navController = navController) }
 

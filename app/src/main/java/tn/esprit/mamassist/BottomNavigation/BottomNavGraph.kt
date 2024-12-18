@@ -7,10 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import tn.esprit.mamassist.ContentScreen
+import tn.esprit.mamassist.doctor.HealthAppHomeScreen
 import tn.esprit.mamassist.Home.Chat.MedicalHelpScreen
 import tn.esprit.mamassist.Tools.ToolsScreen
-import tn.esprit.mamassist.doctor.HealthAppHomeScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController, paddingValues: PaddingValues) {

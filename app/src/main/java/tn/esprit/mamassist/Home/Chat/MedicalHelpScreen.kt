@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun MedicalHelpScreen(navController: NavController, onAskQuestionClick: () -> Unit = {}) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +85,7 @@ fun MedicalHelpScreen(navController: NavController, onAskQuestionClick: () -> Un
                 contentAlignment = Alignment.Center
             ) {
                 Button(
-                    onClick = onAskQuestionClick,
+                    onClick = { navController.navigate("askQuestion") },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     contentPadding = PaddingValues(),
                     shape = RoundedCornerShape(12.dp),

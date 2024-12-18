@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 
 object ApiClient {
 
-   private const val BASE_URL = "http://10.0.2.2:3000/"
+    private const val BASE_URL = "http://10.0.2.2:3000/"
 
     private val retrofit by lazy {
         val client = OkHttpClient.Builder().build()
@@ -18,7 +18,7 @@ object ApiClient {
             .build()
     }
 
-    fun getApiService(): ApiService {
-        return retrofit.create(ApiService::class.java)
+    val apiService: ApiService by lazy {
+        retrofit.create(ApiService::class.java)
     }
 }

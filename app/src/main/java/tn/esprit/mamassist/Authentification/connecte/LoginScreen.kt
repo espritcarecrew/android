@@ -1,5 +1,6 @@
 package tn.esprit.mamassist.Authentification.connecte
 
+import SharedPreferencesManager
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.foundation.Image
@@ -31,7 +32,7 @@ import java.util.regex.Pattern
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     viewModel: LoginViewModel,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: (String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -146,9 +147,14 @@ fun LoginScreen(
                 onClick = {
                     if (email.isEmpty()) emailError.value = "Email cannot be empty"
                     if (password.isEmpty()) passwordError.value = "Password cannot be empty"
+
                     if (email.isNotEmpty() && password.isNotEmpty()) {
-                        viewModel.loginUser(email, password)
-                        onLoginSuccess()
+                        viewModel.loginUser(email, password,
+
+                            onError = { errorMessage ->
+                                passwordError.value = errorMessage
+                            }
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),

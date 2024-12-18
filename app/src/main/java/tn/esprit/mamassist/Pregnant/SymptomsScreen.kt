@@ -1,5 +1,6 @@
 package tn.esprit.mamassist.Pregnant
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,12 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import tn.esprit.mamassist.R
+import tn.esprit.mamassist.data.network.ApiClient
+import tn.esprit.mamassist.data.network.SymptomsRequest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymptomsScreen(navController: NavController) {
     var selectedSymptoms by remember { mutableStateOf(setOf<String>()) }
+    val coroutineScope = rememberCoroutineScope() // Crée un scope de coroutine
 
     Scaffold(
         topBar = {
@@ -73,6 +78,8 @@ fun SymptomsScreen(navController: NavController) {
                     selectedSymptoms = selectedSymptoms,
                     onSelect = { selected ->
                         selectedSymptoms = toggleSelection(selectedSymptoms, selected)
+                        Log.d("SymptomsScreen", "Selected symptom: $selected")
+                        Log.d("SymptomsScreen", "Current selection: $selectedSymptoms")
                     }
                 )
 
@@ -140,14 +147,39 @@ fun SymptomsScreen(navController: NavController) {
 
                 // Bouton enregistrer
                 Button(
-                    onClick = { /* Enregistrer les symptômes */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC1C1))
+                    onClick = {
+                        coroutineScope.launch {
+                            val userId = "user-id" // Simulez ou récupérez l'ID utilisateur connecté
+                            Log.d("SymptomsScreen", "UserID: $userId")
+                            Log.d("SymptomsScreen", "Selected Symptoms: ${selectedSymptoms.toList()}")
+
+                            val response = try {
+
+                                ApiClient.apiService.saveSymptoms(
+                                    SymptomsRequest(userId, selectedSymptoms.toList())
+                                )
+                            } catch (e: Exception) {
+                                Log.e("SymptomsScreen", "Error sending request: ${e.message}")
+                                null
+                            }
+
+                            if (response?.isSuccessful == true) {
+                                val body = response.body()
+                                if (body?.success == true) {
+                                    Log.d("SymptomsScreen", "API Response: ${body.message}")
+                                } else {
+                                    Log.e("SymptomsScreen", "Server error: ${body?.message}")
+                                }
+                            } else {
+                                Log.e("SymptomsScreen", "Network error: ${response?.errorBody()?.string()}")
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Enregistrer les symptômes", fontSize = 16.sp, color = Color.White)
+                    Text("Enregistrer les symptômes")
                 }
+
             }
         }
     )

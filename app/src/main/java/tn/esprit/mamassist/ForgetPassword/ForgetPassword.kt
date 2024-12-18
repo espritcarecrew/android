@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import tn.esprit.mamassist.RetrofitClient
+import tn.esprit.mamassist.data.network.ApiClient
 import tn.esprit.mamassist.data.network.ForgotPasswordRequest
 import tn.esprit.mamassist.data.network.ForgotPasswordResponse
 import tn.esprit.mamassist.data.network.Routes
@@ -103,7 +103,7 @@ fun ForgetPassword(navController: NavController) {
                             if (isEmailValid.value) {
                                 coroutineScope.launch(Dispatchers.IO) {
                                     val request = ForgotPasswordRequest(email.value)
-                                    RetrofitClient.getApiService().forgotPassword(request)
+                                    ApiClient.apiService.forgotPassword(request)
                                         .enqueue(object : Callback<ForgotPasswordResponse> {
                                             override fun onResponse(
                                                 call: Call<ForgotPasswordResponse>,

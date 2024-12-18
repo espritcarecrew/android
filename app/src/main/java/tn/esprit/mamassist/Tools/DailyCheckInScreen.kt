@@ -2,6 +2,7 @@
 
 package tn.esprit.mamassist.Tools
 
+import SharedPreferencesManager
 import android.widget.CalendarView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -24,18 +26,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import tn.esprit.mamassist.data.network.ApiClient
+import tn.esprit.mamassist.data.network.CheckInRequest
+import tn.esprit.mamassist.ui.theme.MamAssistTheme
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun HeaderSection(
-    date: String,
-    weekInfo: String,
-    onClose: () -> Unit,
-    onDateSelected: (String) -> Unit
-) {
+fun HeaderSection(date: String, weekInfo: String, onClose: () -> Unit, onDateSelected: (String) -> Unit) {
     var isCalendarOpen by remember { mutableStateOf(false) }
 
     Box(
@@ -148,9 +148,26 @@ fun CalendarDialog(onDateSelected: (String) -> Unit, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun DailyCheckInScreen(navController: NavHostController) {
+fun DailyCheckInScreen(navController: NavController) {
+
+    val context = LocalContext.current
+    val sharedPreferencesManager = SharedPreferencesManager(context)
+    val userId = sharedPreferencesManager.getUserId()
+    if (userId == null) {
+        println("Error: User ID is missing. Please login again.")
+        return
+    }
     val selectedDate = remember { mutableStateOf("26 Nov") }
     val selectedMood = remember { mutableStateOf(2) } // Default mood (neutral)
+    // Map des emojis avec descriptions
+    val moodMap = listOf(
+        "😡" to "Angry 😡",
+        "🙁" to "Sad 😟",
+        "😐" to "Neutral 😐",
+        "🙂" to "Content 🙂",
+        "😊" to "Happy 😊"
+    )
+
     val discomforts = listOf(
         "Contractions", "Heartburn", "Swelling", "Anxiety",
         "Back pain", "Pain", "Pelvic pain", "Fatigue",
@@ -167,7 +184,7 @@ fun DailyCheckInScreen(navController: NavHostController) {
         HeaderSection(
             date = selectedDate.value,
             weekInfo = "4w+3d",
-            onClose = { navController.navigate("tools") }, // Retour à l'écran "Tools"
+            onClose = { /* Handle close action */ },
             onDateSelected = { newDate -> selectedDate.value = newDate }
         )
 
@@ -186,28 +203,23 @@ fun DailyCheckInScreen(navController: NavHostController) {
         )
 
         // Rangée des humeurs
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            listOf("😡", "🙁", "😐", "🙂", "😊").forEachIndexed { index, emoji ->
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            moodMap.forEachIndexed { index, (emoji, description) ->
                 Text(
                     text = emoji,
                     fontSize = 32.sp,
                     modifier = Modifier
                         .clickable { selectedMood.value = index }
-                        .padding(8.dp)
                         .background(
                             if (selectedMood.value == index) Color.Gray.copy(alpha = 0.2f) else Color.Transparent,
                             shape = RoundedCornerShape(50)
                         )
-                        .padding(16.dp),
-                    textAlign = TextAlign.Center
+                        .padding(8.dp)
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Section de sélection des inconforts
         Text(
@@ -246,6 +258,8 @@ fun DailyCheckInScreen(navController: NavHostController) {
                 }
             }
         }
+        Spacer(modifier = Modifier.height(8.dp))
+
 
         // Champ de texte pour les notes supplémentaires
         Text(
@@ -270,16 +284,42 @@ fun DailyCheckInScreen(navController: NavHostController) {
 
         // Bouton Save
         Button(
-            onClick = { /* Handle Save Action */ },
+            onClick = {
+                val moodDescription = moodMap[selectedMood.value].second
+                val checkInRequest = CheckInRequest(
+                    userId = userId,
+                    date = selectedDate.value,
+                    mood = moodDescription,
+                    discomforts = selectedDiscomforts,
+                    elaboration = elaborationText.value.text
+                )
+
+                // Appel API
+                val call = ApiClient.apiService.createCheckIn(checkInRequest)
+                call.enqueue(object : retrofit2.Callback<Void> {
+                    override fun onResponse(call: retrofit2.Call<Void>, response: retrofit2.Response<Void>) {
+                        if (response.isSuccessful) {
+                            println("Check-In enregistré avec succès !")
+                        } else {
+                            println("Erreur API : ${response.errorBody()?.string()}")
+                        }
+                    }
+
+                    override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
+                        println("Erreur réseau : ${t.message}")
+                    }
+                })
+            },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Save")
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun DailyCheckInScreenPreview() {
-    DailyCheckInScreen(navController = rememberNavController())
+    MamAssistTheme {
+        DailyCheckInScreen(navController = rememberNavController())
+    }
 }
