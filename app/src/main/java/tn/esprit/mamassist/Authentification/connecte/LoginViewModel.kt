@@ -33,7 +33,7 @@ open class LoginViewModel(private val userRepository: UserRepository) : ViewMode
         sharedPreferences.edit().clear().apply() // Clear all preferences
     }
     // Function to handle user login
-    fun loginUser(email: String, password: String,  onError: (String) -> Unit) {
+    fun loginUser(email: String, password: String, onError: (String) -> Unit) {
         viewModelScope.launch {
             _loginUiState.value = LoginUiState(isLoading = true) // Loading
 
@@ -43,11 +43,11 @@ open class LoginViewModel(private val userRepository: UserRepository) : ViewMode
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
-                        val isLoggedIn = true
-                        val userId = loginResponse.userId
-                        val accessToken = loginResponse.accessToken
-
-                        _loginUiState.value = LoginUiState(isLoggedIn = true, token = accessToken)
+                        _loginUiState.value = LoginUiState(
+                            isLoggedIn = true,
+                            userId = loginResponse.userId,
+                            token = loginResponse.accessToken
+                        )
                     } else {
                         onError("Invalid response from server")
                     }
@@ -56,10 +56,9 @@ open class LoginViewModel(private val userRepository: UserRepository) : ViewMode
                 }
             } catch (e: Exception) {
                 onError("Error: ${e.message}")
-            } finally {
-                _loginUiState.value = LoginUiState(isLoading = false)
             }
         }
     }
+
 
 }

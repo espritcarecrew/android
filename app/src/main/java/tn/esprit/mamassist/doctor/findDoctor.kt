@@ -15,11 +15,8 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,16 +27,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import tn.esprit.mamassist.BottomNavigation.BottomBar
 import tn.esprit.mamassist.R
+import tn.esprit.mamassist.data.network.DoctorResponse
 
 @Composable
-fun HealthAppHomeScreen(navController: NavHostController) {
+fun HealthAppHomeScreen(navController: NavHostController, doctorViewModel: DoctorViewModel = viewModel()) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) { padding ->
@@ -71,13 +70,17 @@ fun HealthAppHomeScreen(navController: NavHostController) {
                 fontSize = 18.sp,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            CategoriesSection()
+            CategoriesSection(doctorViewModel)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Recommended Doctors
+            Text("Doctors", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            DoctorsList(doctorViewModel)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             SectionWithSeeAll("Recommended Doctors")
-            RecommendedDoctorsSection()
+            RecommendedDoctorsSection(doctorViewModel)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -87,7 +90,91 @@ fun HealthAppHomeScreen(navController: NavHostController) {
         }
     }
 }
+@Composable
+fun SectionWithSeeAll(title: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
+        Text(
+            text = "See All",
+            fontSize = 14.sp,
+            color = Color(0xFF9C27B0),
+            modifier = Modifier.clickable { /* Handle click */ }
+        )
+    }
+}
+@Composable
+fun RecommendedDoctorsSection(viewModel: DoctorViewModel) {
+    val doctors by viewModel.favoriteDoctors.observeAsState(initial = emptyList())
+
+    val a = listOf(
+
+        "Dr. Amelia Daniel\nDermatologist",
+        "Dr. Erik Wagner\nUrology",
+        "Dr. Benjamin Scott\nCardiology",
+        "Dr. Sarah Johnson\nPediatrics",
+        "Dr. Mark Spencer\nEndocrinology"
+    )
+    val favoriteDoctors by viewModel.favoriteDoctors.observeAsState(initial = emptyList())
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(doctors) { doctor ->
+            var isFavorite by remember { mutableStateOf(false) }
+
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .background(Color.White, RoundedCornerShape(16.dp))
+                    .padding(8.dp)
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .size(140.dp)
+                            .background(Color.LightGray)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.TopEnd
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.doctor),
+                            contentDescription = "Doctor Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Favorite Icon",
+                            tint = if (isFavorite) Color.Red else Color.Gray,
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(4.dp)
+                                .clickable {
+                                    isFavorite = !isFavorite
+                                    viewModel.addDoctorToFavorites(doctor.id)
+                                }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = doctor.name,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                }
+            }}}}
 @Composable
 fun HeaderSection() {
     Row(
@@ -149,7 +236,7 @@ fun SearchBar() {
 }
 
 @Composable
-fun CategoriesSection() {
+fun CategoriesSection(viewModel: DoctorViewModel) {
     val categories = listOf(
         "Gynécologie", "Pédiatrie", "Endocrinologie",
         "Nutritionniste", "Psychologue", "Kinésithérapeute",
@@ -163,7 +250,7 @@ fun CategoriesSection() {
     ) {
         items(categories) { category ->
             Column(
-                modifier = Modifier.clickable { /* Handle click */ },
+                modifier = Modifier.clickable { viewModel.fetchDoctorsByCategory(category) },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -191,82 +278,53 @@ fun CategoriesSection() {
 }
 
 @Composable
-fun SectionWithSeeAll(title: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+fun DoctorsList(viewModel: DoctorViewModel) {
+    val doctors by viewModel.doctorsByCategory.observeAsState(emptyList())
 
-        Text(
-            text = "See All",
-            fontSize = 14.sp,
-            color = Color(0xFF9C27B0),
-            modifier = Modifier.clickable { /* Handle click */ }
-        )
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(doctors) { doctor ->
+            DoctorItem(doctor, viewModel)
+        }
     }
 }
 
 @Composable
-fun RecommendedDoctorsSection() {
-    val doctors = listOf(
-        "Dr. Amelia Daniel\nDermatologist",
-        "Dr. Erik Wagner\nUrology",
-        "Dr. Benjamin Scott\nCardiology",
-        "Dr. Sarah Johnson\nPediatrics",
-        "Dr. Mark Spencer\nEndocrinology"
-    )
+fun DoctorItem(doctor: DoctorResponse, viewModel: DoctorViewModel) {
+    var isFavorite by remember { mutableStateOf(doctor.isFavorite) }
 
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RoundedCornerShape(16.dp))
+            .padding(16.dp)
     ) {
-        items(doctors) { doctor ->
-            var isFavorite by remember { mutableStateOf(false) }
-
-            Box(
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.doctor),
+                contentDescription = "Doctor Image",
                 modifier = Modifier
-                    .width(140.dp)
-                    .background(Color.White, RoundedCornerShape(16.dp))
-                    .padding(8.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .size(140.dp)
-                            .background(Color.LightGray)
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentAlignment = Alignment.TopEnd
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.doctor),
-                            contentDescription = "Doctor Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                    .size(100.dp)
+                    .padding(end = 16.dp)
+            )
+            Column {
+                Text(text = doctor.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(text = doctor.bio, color = Color.Gray, fontSize = 14.sp)
+                Spacer(modifier = Modifier.height(8.dp))
 
-                        Icon(
-                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "Favorite Icon",
-                            tint = if (isFavorite) Color.Red else Color.Gray,
-                            modifier = Modifier
-                                .size(30.dp)
-                                .padding(4.dp)
-                                .clickable { isFavorite = !isFavorite }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = doctor,
-                        textAlign = TextAlign.Center,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = "Favorite Icon",
+                    tint = if (isFavorite) Color.Red else Color.Gray,
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clickable {
+                            viewModel.addDoctorToFavorites(doctor.id)
+                            isFavorite = !isFavorite
+                        }
+                )
             }
         }
     }

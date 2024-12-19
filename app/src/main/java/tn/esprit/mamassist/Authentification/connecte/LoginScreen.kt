@@ -44,7 +44,11 @@ fun LoginScreen(
     val loginUiState by viewModel.loginUiState.observeAsState(LoginUiState())
 
     val emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$")
-
+    LaunchedEffect(loginUiState.isLoggedIn) {
+        if (loginUiState.isLoggedIn) {
+            loginUiState.userId?.let { onLoginSuccess(it) }
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         // Image de fond
             Column(
@@ -156,13 +160,23 @@ fun LoginScreen(
                             }
                         )
                     }
+
                 },
+
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = VSky),
             ) {
                 Text(text = "Login", color = Color.White)
             }
+            // Afficher une erreur si elle existe
+            loginUiState.errorMessage?.let {
+                Text("Error: $it", color = Color.Red)
+            }
 
+            // Afficher le chargement
+            if (loginUiState.isLoading) {
+                CircularProgressIndicator()
+            }
             // Lien "Mot de passe oublié"
             Text(
                 "Forgot password",

@@ -6,7 +6,9 @@ import retrofit2.http.POST
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.Path
+import retrofit2.http.Query
 import tn.esprit.mamassist.data.repository.UserRepository
 
 data class PredictionRequest(
@@ -72,13 +74,17 @@ data class DoctorRequest(
 )
 
 data class DoctorResponse(
-    val name: String,
+    val id: String,          // Identifiant unique du médecin
+    val name: String,        // Nom du médecin
     val specialization: String,
+    val bio: String,         // Spécialité ou description
     val experience: Int,
     val contact: String,
     val location: String,
-    val availableTimes: List<String>
+    val availableTimes: List<String>,
+    val isFavorite: Boolean  // Facultatif : statut de favori
 )
+
 data class DoctorSelectionRequest(
     val userId: String,
     val doctorName: String,
@@ -122,7 +128,6 @@ data class CheckInRequest(
     val discomforts: List<String> = emptyList(),
     val elaboration: String? = null
 )
-
 
 object Routes {
     val Login = Route("login")
@@ -173,6 +178,15 @@ interface ApiService {
 
     @POST("predictions")
     suspend fun makePrediction(@Body request: PredictionRequest): Response<PredictionResponse>
+
+    @GET("doctors/category")
+    fun getDoctorsByCategory(@Query("bio") bio: String): Call<List<DoctorResponse>>
+
+    @PATCH("doctors/favorite/{id}")
+    fun addDoctorToFavorites(@Path("id") id: String): Call<Void>
+
+    @GET("doctors/favorites")
+    fun getFavoriteDoctors(): Call<List<DoctorResponse>>
 }
 
 
